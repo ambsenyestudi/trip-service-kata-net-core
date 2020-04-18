@@ -40,6 +40,22 @@ namespace TripServiceKata.Test.TripServiceTests
             var trips = tripService.GetTripsByUser(notFriend);
             Assert.Empty(trips);
         }
+        [Fact]
+        public void show_friend_trips()
+        {
+            loggedInUser = REGISTERED_USER;
+
+            var myFriend = new User();
+            myFriend.AddFriend(SOME_USER);
+            myFriend.AddFriend(loggedInUser);
+            myFriend.AddTrip(TO_BILBAO);
+            myFriend.AddTrip(TO_ZARAGOZA);
+            
+            var trips = tripService.GetTripsByUser(myFriend);
+
+            var expectedTripCount = 2;
+            Assert.Equal(expectedTripCount, trips.Count);
+        }
 
         //Sim testing class to avoid jumping to DI at first step
         class TestableTripService : TripService
