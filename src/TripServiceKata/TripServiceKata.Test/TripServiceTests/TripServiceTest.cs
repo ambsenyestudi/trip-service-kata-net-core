@@ -62,7 +62,7 @@ namespace TripServiceKata.Test.TripServiceTests
                 .WithTrips(TO_ZARAGOZA, TO_BILBAO)
                 .Build();
             
-            var trips = developTripService.GetTripsByUser(myFriend);
+            var trips = productionTripService.GetTripsByUser(myFriend);
 
             var expectedTripCount = 2;
             Assert.Equal(expectedTripCount, trips.Count);
