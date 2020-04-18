@@ -1,10 +1,9 @@
-﻿using TripServiceKata.Domain.Users;
-using TripServiceKata.Domain.Trips;
-using Xunit;
+﻿using NSubstitute;
 using TripServiceKata.Domain.Exceptions;
-using System.Collections.Generic;
+using TripServiceKata.Domain.Trips;
+using TripServiceKata.Domain.Users;
 using TripServiceKata.Test.UserTests;
-using NSubstitute;
+using Xunit;
 
 namespace TripServiceKata.Test.TripServiceTests
 {
