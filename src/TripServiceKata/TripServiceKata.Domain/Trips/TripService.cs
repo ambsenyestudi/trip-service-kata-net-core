@@ -8,36 +8,23 @@ namespace TripServiceKata.Domain.Trips
     {
         public List<Trip> GetTripsByUser(User user)
         {
-            List<Trip> tripList = new List<Trip>();
             User loggedUser = GetLoggedUsers();
 
             if (loggedUser != null)
             {
-                //refator starts at deepest branch
-                //this is a feature envy from User domain entity
-                //friend is a user responsibility
-                /*
-                bool isFriend = false;
-                foreach (User friend in user.GetFriends())
-                {
-                    if (friend.Equals(loggedUser))
-                    {
-                        isFriend = true;
-                        break;
-                    }
-                }
-                */
                 if (user.IsFriendsWith(loggedUser))
                 {
-                    tripList = GetTripsBy(user);
+                    return GetTripsBy(user);
                 }
-                return tripList;
+                return NoTrips();
             }
             else
             {
                 throw new UserNotLoggedInException();
             }
         }
+        private List<Trip> NoTrips() =>
+            new List<Trip>();
         protected virtual User GetLoggedUsers() =>
             UserSession.GetInstance().GetLoggedUser();
         protected virtual List<Trip> GetTripsBy(User user) =>
