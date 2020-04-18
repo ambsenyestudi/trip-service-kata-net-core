@@ -11,14 +11,13 @@ namespace TripServiceKata.Domain.Trips
             List<Trip> tripList = new List<Trip>();
             User loggedUser = GetLoggedUsers();
 
-            bool isFriend = false;
             if (loggedUser != null)
             {
-                isFriend = user.IsFriendsWith(loggedUser);
                 //refator starts at deepest branch
                 //this is a feature envy from User domain entity
                 //friend is a user responsibility
                 /*
+                bool isFriend = false;
                 foreach (User friend in user.GetFriends())
                 {
                     if (friend.Equals(loggedUser))
@@ -28,7 +27,7 @@ namespace TripServiceKata.Domain.Trips
                     }
                 }
                 */
-                if (isFriend)
+                if (user.IsFriendsWith(loggedUser))
                 {
                     tripList = GetTripsBy(user);
                 }
