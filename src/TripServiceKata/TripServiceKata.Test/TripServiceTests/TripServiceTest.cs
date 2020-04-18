@@ -16,7 +16,6 @@ namespace TripServiceKata.Test.TripServiceTests
         private static readonly Trip TO_ZARAGOZA = new Trip();
         private static readonly Trip TO_BILBAO = new Trip();
         private readonly UserBuilder UserBuilder;
-        private TestableTripService developTripService;
         private TripService productionTripService;
         private IUserSession userSession;
         private ITripDAO tripDAO;
@@ -24,7 +23,6 @@ namespace TripServiceKata.Test.TripServiceTests
         {
             userSession = Substitute.For<IUserSession>();
             tripDAO = Substitute.For<ITripDAO>();
-            developTripService = new TestableTripService();
             productionTripService = new TripService(userSession, tripDAO);
             UserBuilder = new UserBuilder();
         }
@@ -32,7 +30,6 @@ namespace TripServiceKata.Test.TripServiceTests
         [Fact]
         public void kick_out_when_user_not_logged_in()
         {
-            //Using nSubstitute mocking flow
             userSession.GetLoggedUser().Returns(GUEST);
 
             Assert.Throws<UserNotLoggedInException>(()=> productionTripService.GetTripsByUser(SOME_USER));
@@ -65,15 +62,6 @@ namespace TripServiceKata.Test.TripServiceTests
 
             var expectedTripCount = 2;
             Assert.Equal(expectedTripCount, trips.Count);
-        }
-
-        //Sim testing class to avoid jumping to DI at first step
-        class TestableTripService : TripService
-        {
-            protected override User GetLoggedUsers() => null;
-
-            protected override List<Trip> GetTripsBy(User user) => 
-                user.Trips();
         }
     }
 }
