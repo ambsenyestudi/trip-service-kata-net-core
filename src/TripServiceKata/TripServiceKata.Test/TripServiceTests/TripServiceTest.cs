@@ -31,7 +31,8 @@ namespace TripServiceKata.Test.TripServiceTests
         [Fact]
         public void kick_out_when_user_not_logged_in()
         {
-            loggedInUser = GUEST;
+            //Using nSubstitute mocking flow
+            userSession.GetLoggedUser().Returns(GUEST);
 
             Assert.Throws<UserNotLoggedInException>(()=> productionTripService.GetTripsByUser(SOME_USER));
         }
