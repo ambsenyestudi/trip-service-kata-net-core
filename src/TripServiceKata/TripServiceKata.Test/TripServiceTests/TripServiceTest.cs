@@ -8,6 +8,8 @@ namespace TripServiceKata.Test.TripServiceTests
     public class trip_service_should
     {
         private static User loggedInUser = null;
+        private static readonly User GUEST = null;
+        private static readonly User SOME_USER = null;
         private TestableTripService tripService;
         public trip_service_should()
         {
@@ -17,9 +19,9 @@ namespace TripServiceKata.Test.TripServiceTests
         [Fact]
         public void kick_out_when_user_not_logged_in()
         {
-            var someUser = new User();
+            loggedInUser = GUEST;
 
-            Assert.Throws<UserNotLoggedInException>(()=>tripService.GetTripsByUser(someUser));
+            Assert.Throws<UserNotLoggedInException>(()=>tripService.GetTripsByUser(SOME_USER));
         }
 
 
