@@ -40,7 +40,7 @@ namespace TripServiceKata.Test.TripServiceTests
         [Fact]
         public void not_show_any_trips_when_users_not_friends()
         {
-            userSession.GetLoggedUser().Returns(GUEST);
+            userSession.GetLoggedUser().Returns(REGISTERED_USER);
 
             var notFriend = UserBuilder
                 .WithFriends(SOME_USER)
