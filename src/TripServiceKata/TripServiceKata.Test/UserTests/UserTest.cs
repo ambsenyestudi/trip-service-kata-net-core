@@ -28,5 +28,15 @@ namespace TripServiceKata.Test.UserTests
             
             Assert.False(user.IsFriendsWith(ALICE));
         }
+
+        [Fact]
+        public void tell_when_friendly_user()
+        {
+            var user = UserBuilder
+                .WithFriends(ALICE)
+                .Build();
+
+            Assert.True(user.IsFriendsWith(ALICE));
+        }
     }
 }
