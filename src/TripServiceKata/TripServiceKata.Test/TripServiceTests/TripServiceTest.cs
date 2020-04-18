@@ -11,7 +11,6 @@ namespace TripServiceKata.Test.TripServiceTests
         private static readonly User GUEST = null;
         private static readonly User SOME_USER = new User();
         private static readonly User REGISTERED_USER = new User();
-        private static readonly User NOT_FRIEND_USER = new User();
         private static readonly Trip TO_ZARAGOZA = new Trip();
         private static readonly Trip TO_BILBAO = new Trip();
 
@@ -34,11 +33,11 @@ namespace TripServiceKata.Test.TripServiceTests
         {
             loggedInUser = REGISTERED_USER;
 
-            var user = new User();
-            user.AddFriend(NOT_FRIEND_USER);
-            user.AddTrip(TO_ZARAGOZA);
-            user.AddTrip(TO_BILBAO);
-            var trips = tripService.GetTripsByUser(user);
+            var notFriend = new User();
+            notFriend.AddFriend(SOME_USER);
+            notFriend.AddTrip(TO_ZARAGOZA);
+            notFriend.AddTrip(TO_BILBAO);
+            var trips = tripService.GetTripsByUser(notFriend);
             Assert.Empty(trips);
         }
 
