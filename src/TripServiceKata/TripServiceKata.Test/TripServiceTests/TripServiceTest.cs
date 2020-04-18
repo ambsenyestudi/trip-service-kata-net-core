@@ -9,7 +9,12 @@ namespace TripServiceKata.Test.TripServiceTests
     {
         private static User loggedInUser = null;
         private static readonly User GUEST = null;
-        private static readonly User SOME_USER = null;
+        private static readonly User SOME_USER = new User();
+        private static readonly User REGISTERED_USER = new User();
+        private static readonly User NOT_FRIEND_USER = new User();
+        private static readonly Trip TO_ZARAGOZA = new Trip();
+        private static readonly Trip TO_BILBAO = new Trip();
+
         private TestableTripService tripService;
         public trip_service_should()
         {
@@ -24,6 +29,18 @@ namespace TripServiceKata.Test.TripServiceTests
             Assert.Throws<UserNotLoggedInException>(()=>tripService.GetTripsByUser(SOME_USER));
         }
 
+        [Fact]
+        public void not_show_any_trips_when_users_not_friends()
+        {
+            loggedInUser = REGISTERED_USER;
+
+            var user = new User();
+            user.AddFriend(NOT_FRIEND_USER);
+            user.AddTrip(TO_ZARAGOZA);
+            user.AddTrip(TO_BILBAO);
+            var trips = tripService.GetTripsByUser(user);
+            Assert.Empty(trips);
+        }
 
         //Sim testing class to avoid jumping to DI at first step
         class TestableTripService : TripService
