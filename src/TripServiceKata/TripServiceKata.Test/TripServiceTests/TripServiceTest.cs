@@ -10,7 +10,6 @@ namespace TripServiceKata.Test.TripServiceTests
 {
     public class trip_service_should
     {
-        private static User loggedInUser = null;
         private static readonly User GUEST = null;
         private static readonly User SOME_USER = new User();
         private static readonly User REGISTERED_USER = new User();
@@ -42,26 +41,26 @@ namespace TripServiceKata.Test.TripServiceTests
         [Fact]
         public void not_show_any_trips_when_users_not_friends()
         {
-            userSession.GetLoggedUser().Returns(REGISTERED_USER);
-
             var notFriend = UserBuilder
                 .WithFriends(SOME_USER)
                 .WithTrips(TO_ZARAGOZA, TO_BILBAO)
                 .Build();
-
+            userSession.GetLoggedUser().Returns(REGISTERED_USER);
+            
             var trips = productionTripService.GetTripsByUser(notFriend);
             Assert.Empty(trips);
         }
         [Fact]
         public void show_friend_trips()
         {
-            loggedInUser = REGISTERED_USER;
-
             var myFriend = UserBuilder
-                .WithFriends(SOME_USER, loggedInUser)
+                .WithFriends(SOME_USER, REGISTERED_USER)
                 .WithTrips(TO_ZARAGOZA, TO_BILBAO)
                 .Build();
-            
+
+            userSession.GetLoggedUser().Returns(REGISTERED_USER);
+            tripDAO.GetTripsBy(myFriend).Returns(myFriend.Trips());
+
             var trips = productionTripService.GetTripsByUser(myFriend);
 
             var expectedTripCount = 2;
@@ -71,8 +70,8 @@ namespace TripServiceKata.Test.TripServiceTests
         //Sim testing class to avoid jumping to DI at first step
         class TestableTripService : TripService
         {
-            protected override User GetLoggedUsers() =>
-                loggedInUser;
+            protected override User GetLoggedUsers() => null;
+
             protected override List<Trip> GetTripsBy(User user) => 
                 user.Trips();
         }
