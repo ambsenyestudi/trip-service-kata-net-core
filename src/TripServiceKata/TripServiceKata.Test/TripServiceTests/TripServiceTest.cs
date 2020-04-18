@@ -2,6 +2,7 @@
 using TripServiceKata.Domain.Trips;
 using Xunit;
 using TripServiceKata.Domain.Exceptions;
+using System.Collections.Generic;
 
 namespace TripServiceKata.Test.TripServiceTests
 {
@@ -60,10 +61,10 @@ namespace TripServiceKata.Test.TripServiceTests
         //Sim testing class to avoid jumping to DI at first step
         class TestableTripService : TripService
         {
-            protected override User GetLoggedUsers()
-            {
-                return loggedInUser;
-            }
+            protected override User GetLoggedUsers() =>
+                loggedInUser;
+            protected override List<Trip> GetTripsBy(User user) => 
+                user.Trips();
         }
     }
 }
