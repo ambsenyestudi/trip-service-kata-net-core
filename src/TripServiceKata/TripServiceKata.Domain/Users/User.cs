@@ -31,7 +31,7 @@ namespace TripServiceKata.Domain.Users
 
         public bool IsFriendsWith(User user)
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }
