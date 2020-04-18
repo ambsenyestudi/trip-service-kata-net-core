@@ -17,8 +17,6 @@ namespace TripServiceKata.Test.UserTests
             UserBuilder = new UserBuilder();
         }
 
-        
-
         [Fact]
         public void tell_when_user_not_befriended()
         {
