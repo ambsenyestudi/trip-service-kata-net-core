@@ -40,14 +40,14 @@ namespace TripServiceKata.Test.TripServiceTests
         [Fact]
         public void not_show_any_trips_when_users_not_friends()
         {
-            loggedInUser = REGISTERED_USER;
+            userSession.GetLoggedUser().Returns(GUEST);
 
             var notFriend = UserBuilder
                 .WithFriends(SOME_USER)
                 .WithTrips(TO_ZARAGOZA, TO_BILBAO)
                 .Build();
 
-            var trips = developTripService.GetTripsByUser(notFriend);
+            var trips = productionTripService.GetTripsByUser(notFriend);
             Assert.Empty(trips);
         }
         [Fact]
