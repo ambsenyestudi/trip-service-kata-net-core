@@ -1,63 +1,53 @@
 ﻿using NSubstitute;
 using TripServiceKata.Domain.Exceptions;
-using TripServiceKata.Domain.Trips;
-using TripServiceKata.Domain.Users;
-using TripServiceKata.Test.UserTests;
 using Xunit;
 
 namespace TripServiceKata.Test.TripServiceTests
 {
-    public class trip_service_should
+    public class trip_service_should:IClassFixture<TripServiceFixture>
     {
-        private static readonly User GUEST = null;
-        private static readonly User SOME_USER = new User();
-        private static readonly User REGISTERED_USER = new User();
-        private static readonly Trip TO_ZARAGOZA = new Trip();
-        private static readonly Trip TO_BILBAO = new Trip();
-        private readonly UserBuilder UserBuilder;
-        private TripService productionTripService;
-        private IUserSession userSession;
-        private ITripDAO tripDAO;
-        public trip_service_should()
+        private TripServiceFixture fixture;
+
+        public trip_service_should(TripServiceFixture fixture)
         {
-            userSession = Substitute.For<IUserSession>();
-            tripDAO = Substitute.For<ITripDAO>();
-            productionTripService = new TripService(userSession, tripDAO);
-            UserBuilder = new UserBuilder();
+            this.fixture = fixture;
         }
 
         [Fact]
         public void kick_out_when_user_not_logged_in()
         {
-            userSession.GetLoggedUser().Returns(GUEST);
-
-            Assert.Throws<UserNotLoggedInException>(()=> productionTripService.GetTripsByUser(SOME_USER));
+            fixture.UserSession.GetLoggedUser().Returns(fixture.GUEST);
+            var tripService = fixture.TripService;
+            Assert.Throws<UserNotLoggedInException>(()=> tripService.GetTripsByUser(fixture.SOME_USER));
         }
-
+        
         [Fact]
         public void not_show_any_trips_when_users_not_friends()
         {
-            var notFriend = UserBuilder
-                .WithFriends(SOME_USER)
-                .WithTrips(TO_ZARAGOZA, TO_BILBAO)
+            var notFriend = fixture.UserBuilder
+                .WithFriends(fixture.SOME_USER)
+                .WithTrips(fixture.TO_ZARAGOZA, fixture.TO_BILBAO)
                 .Build();
-            userSession.GetLoggedUser().Returns(REGISTERED_USER);
-            
-            var trips = productionTripService.GetTripsByUser(notFriend);
+            fixture.UserSession.GetLoggedUser().Returns(fixture.REGISTERED_USER);
+            var tripService = fixture.TripService;
+
+            var trips = tripService.GetTripsByUser(notFriend);
             Assert.Empty(trips);
         }
+        
         [Fact]
         public void show_friend_trips()
         {
-            var myFriend = UserBuilder
-                .WithFriends(SOME_USER, REGISTERED_USER)
-                .WithTrips(TO_ZARAGOZA, TO_BILBAO)
+            var myFriend = fixture.UserBuilder
+                .WithFriends(fixture.SOME_USER, fixture.REGISTERED_USER)
+                .WithTrips(fixture.TO_ZARAGOZA, fixture.TO_BILBAO)
                 .Build();
 
-            userSession.GetLoggedUser().Returns(REGISTERED_USER);
-            tripDAO.GetTripsBy(myFriend).Returns(myFriend.Trips());
+            fixture.UserSession.GetLoggedUser().Returns(fixture.REGISTERED_USER);
+            fixture.TripDAO.GetTripsBy(myFriend).Returns(myFriend.Trips());
 
-            var trips = productionTripService.GetTripsByUser(myFriend);
+            var tripService = fixture.TripService;
+            var trips = tripService.GetTripsByUser(myFriend);
 
             var expectedTripCount = 2;
             Assert.Equal(expectedTripCount, trips.Count);
