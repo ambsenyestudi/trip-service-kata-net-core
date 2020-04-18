@@ -29,9 +29,7 @@ namespace TripServiceKata.Domain.Users
             return trips;
         }
 
-        public bool IsFriendsWith(User user)
-        {
-            return false;
-        }
+        public bool IsFriendsWith(User user) => 
+            friends.Contains(user);
     }
 }
