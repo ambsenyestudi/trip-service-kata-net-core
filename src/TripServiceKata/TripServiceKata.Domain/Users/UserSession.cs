@@ -2,7 +2,7 @@
 
 namespace TripServiceKata.Domain.Users
 {
-    public class UserSession
+    public class UserSession : IUserSession
     {
         private static readonly UserSession userSession = new UserSession();
         public static UserSession GetInstance() => userSession;

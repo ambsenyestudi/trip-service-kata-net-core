@@ -4,6 +4,7 @@ using Xunit;
 using TripServiceKata.Domain.Exceptions;
 using System.Collections.Generic;
 using TripServiceKata.Test.UserTests;
+using NSubstitute;
 
 namespace TripServiceKata.Test.TripServiceTests
 {
@@ -16,10 +17,14 @@ namespace TripServiceKata.Test.TripServiceTests
         private static readonly Trip TO_ZARAGOZA = new Trip();
         private static readonly Trip TO_BILBAO = new Trip();
         private readonly UserBuilder UserBuilder;
-        private TestableTripService tripService;
+        private TestableTripService developTripService;
+        private TripService productionTripService;
+        private IUserSession userSession;
         public trip_service_should()
         {
-            tripService = new TestableTripService();
+            userSession = Substitute.For<IUserSession>();
+            developTripService = new TestableTripService();
+            productionTripService = new TripService(userSession);
             UserBuilder = new UserBuilder();
         }
 
@@ -28,7 +33,7 @@ namespace TripServiceKata.Test.TripServiceTests
         {
             loggedInUser = GUEST;
 
-            Assert.Throws<UserNotLoggedInException>(()=>tripService.GetTripsByUser(SOME_USER));
+            Assert.Throws<UserNotLoggedInException>(()=> productionTripService.GetTripsByUser(SOME_USER));
         }
 
         [Fact]
@@ -41,7 +46,7 @@ namespace TripServiceKata.Test.TripServiceTests
                 .WithTrips(TO_ZARAGOZA, TO_BILBAO)
                 .Build();
 
-            var trips = tripService.GetTripsByUser(notFriend);
+            var trips = developTripService.GetTripsByUser(notFriend);
             Assert.Empty(trips);
         }
         [Fact]
@@ -54,7 +59,7 @@ namespace TripServiceKata.Test.TripServiceTests
                 .WithTrips(TO_ZARAGOZA, TO_BILBAO)
                 .Build();
             
-            var trips = tripService.GetTripsByUser(myFriend);
+            var trips = developTripService.GetTripsByUser(myFriend);
 
             var expectedTripCount = 2;
             Assert.Equal(expectedTripCount, trips.Count);
