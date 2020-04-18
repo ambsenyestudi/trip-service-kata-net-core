@@ -28,5 +28,10 @@ namespace TripServiceKata.Domain.Users
         {
             return trips;
         }
+
+        public bool IsFriendsWith(User user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

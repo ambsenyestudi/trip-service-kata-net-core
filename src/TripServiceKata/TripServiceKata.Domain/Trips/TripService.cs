@@ -10,9 +10,13 @@ namespace TripServiceKata.Domain.Trips
         {
             List<Trip> tripList = new List<Trip>();
             User loggedUser = GetLoggedUsers();
+
             bool isFriend = false;
             if (loggedUser != null)
             {
+                //refator starts at deepest branch
+                //this is a feature envy from User domain entity
+                //friend is a user responsibility
                 foreach (User friend in user.GetFriends())
                 {
                     if (friend.Equals(loggedUser))
