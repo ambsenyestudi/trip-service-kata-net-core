@@ -12,11 +12,9 @@ namespace TripServiceKata.Domain.Trips
 
             if (loggedUser != null)
             {
-                if (user.IsFriendsWith(loggedUser))
-                {
-                    return GetTripsBy(user);
-                }
-                return NoTrips();
+                return user.IsFriendsWith(loggedUser) 
+                    ? GetTripsBy(user)
+                    :NoTrips();
             }
             else
             {
