@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace TripServiceKata.Test.TripService
+namespace TripServiceKata.Test.TripServiceTests
 {
     public class trip_service_should
     {
