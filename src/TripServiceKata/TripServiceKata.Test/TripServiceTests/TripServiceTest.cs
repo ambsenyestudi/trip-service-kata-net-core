@@ -3,6 +3,7 @@ using TripServiceKata.Domain.Trips;
 using Xunit;
 using TripServiceKata.Domain.Exceptions;
 using System.Collections.Generic;
+using TripServiceKata.Test.UserTests;
 
 namespace TripServiceKata.Test.TripServiceTests
 {
@@ -14,11 +15,12 @@ namespace TripServiceKata.Test.TripServiceTests
         private static readonly User REGISTERED_USER = new User();
         private static readonly Trip TO_ZARAGOZA = new Trip();
         private static readonly Trip TO_BILBAO = new Trip();
-
+        private readonly UserBuilder UserBuilder;
         private TestableTripService tripService;
         public trip_service_should()
         {
             tripService = new TestableTripService();
+            UserBuilder = new UserBuilder();
         }
 
         [Fact]
@@ -34,10 +36,11 @@ namespace TripServiceKata.Test.TripServiceTests
         {
             loggedInUser = REGISTERED_USER;
 
-            var notFriend = new User();
-            notFriend.AddFriend(SOME_USER);
-            notFriend.AddTrip(TO_ZARAGOZA);
-            notFriend.AddTrip(TO_BILBAO);
+            var notFriend = UserBuilder
+                .WithFriends(SOME_USER)
+                .WithTrips(TO_ZARAGOZA, TO_BILBAO)
+                .Build();
+
             var trips = tripService.GetTripsByUser(notFriend);
             Assert.Empty(trips);
         }
@@ -46,11 +49,10 @@ namespace TripServiceKata.Test.TripServiceTests
         {
             loggedInUser = REGISTERED_USER;
 
-            var myFriend = new User();
-            myFriend.AddFriend(SOME_USER);
-            myFriend.AddFriend(loggedInUser);
-            myFriend.AddTrip(TO_BILBAO);
-            myFriend.AddTrip(TO_ZARAGOZA);
+            var myFriend = UserBuilder
+                .WithFriends(SOME_USER, loggedInUser)
+                .WithTrips(TO_ZARAGOZA, TO_BILBAO)
+                .Build();
             
             var trips = tripService.GetTripsByUser(myFriend);
 
