@@ -9,15 +9,17 @@ namespace TripServiceKata.Domain.Trips
     public class TripService
     {
         private readonly IUserSession userSession;
+        private readonly ITripDAO tripDAO;
 
         //default constructor to avoid breaking production
-        public TripService():this(UserSession.GetInstance())
+        public TripService():this(UserSession.GetInstance(), new TripDAO())
         {
-
         }
-        public TripService(IUserSession userSession)
+
+        public TripService(IUserSession userSession, ITripDAO tripDAO)
         {
-            this.userSession = userSession ?? throw new ArgumentNullException("No useer sesion at trip service");
+            this.userSession = userSession ?? throw new ArgumentNullException("No user session at trip service");
+            this.tripDAO = tripDAO ?? throw new ArgumentNullException("No tripDAO at trip service");
         }
         public List<Trip> GetTripsByUser(User user)
         {
@@ -33,6 +35,6 @@ namespace TripServiceKata.Domain.Trips
         protected virtual User GetLoggedUsers() =>
             userSession.GetLoggedUser();
         protected virtual List<Trip> GetTripsBy(User user) =>
-            Trips.TripDAO.FindTripsByUser(user);
+            tripDAO.GetTripsBy(user);
     }
 }

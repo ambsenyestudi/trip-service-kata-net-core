@@ -20,11 +20,13 @@ namespace TripServiceKata.Test.TripServiceTests
         private TestableTripService developTripService;
         private TripService productionTripService;
         private IUserSession userSession;
+        private ITripDAO tripDAO;
         public trip_service_should()
         {
             userSession = Substitute.For<IUserSession>();
+            tripDAO = Substitute.For<ITripDAO>();
             developTripService = new TestableTripService();
-            productionTripService = new TripService(userSession);
+            productionTripService = new TripService(userSession, tripDAO);
             UserBuilder = new UserBuilder();
         }
 
