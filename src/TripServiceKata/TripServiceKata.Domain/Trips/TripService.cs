@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Tools.Assertions;
 using TripServiceKata.Domain.Exceptions;
 using TripServiceKata.Domain.Users;
 
@@ -9,11 +10,7 @@ namespace TripServiceKata.Domain.Trips
         public List<Trip> GetTripsByUser(User user)
         {
             User loggedUser = GetLoggedUsers();
-
-            if (loggedUser != null)
-            {
-                throw new UserNotLoggedInException();
-            }
+            Ensure.NotNull<UserNotLoggedInException>(loggedUser, "User is not logged in");
 
             return user.IsFriendsWith(loggedUser)
                     ? GetTripsBy(user)
